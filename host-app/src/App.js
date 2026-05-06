@@ -21,7 +21,6 @@ export default function App() {
     setEventLog(prev => [{ ...entry, time: new Date().toLocaleTimeString() }, ...prev].slice(0, 30));
   }, []);
 
-  // Initialize widget SDK
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
@@ -33,14 +32,12 @@ export default function App() {
         setWidgetReady(true);
         addLog({ type: 'system', label: 'Widget', value: 'Connected and ready' });
 
-        // Register watchers
         WidgetSDK.watchText('findings-editor', { label: 'Findings', debounce: 500 });
         WidgetSDK.watchText('impression-editor', { label: 'Impression', debounce: 500 });
         WidgetSDK.watchSelect('modality-select', { label: 'Modality' });
         WidgetSDK.watchClick('btn-sign', { label: 'Sign report' });
         WidgetSDK.watchClick('btn-addendum', { label: 'Add addendum' });
 
-        // Push initial study context
         WidgetSDK.setContext({
           patientId: STUDIES[0].patientId,
           studyUid: STUDIES[0].id,
@@ -54,7 +51,6 @@ export default function App() {
       },
     });
 
-    // Handle widget insert actions
     WidgetSDK.onAction((action) => {
       addLog({ type: 'action', label: 'Widget insert', value: action.text?.substring(0, 60) + '...' });
       const el = action.targetElementId === 'impression-editor' ? impressionRef.current
@@ -70,7 +66,6 @@ export default function App() {
     return () => WidgetSDK.destroy();
   }, [addLog]);
 
-  // Update context when study changes
   const handleStudyChange = (study) => {
     setSelectedStudy(study);
     setReportStatus('draft');
@@ -88,7 +83,6 @@ export default function App() {
 
   return (
     <div style={styles.container}>
-      {/* Header */}
       <header style={styles.header}>
         <div style={styles.headerLeft}>
           <div style={styles.logo}>RadReport</div>
@@ -101,7 +95,6 @@ export default function App() {
       </header>
 
       <div style={styles.mainLayout}>
-        {/* Left sidebar - study list */}
         <aside style={styles.sidebar}>
           <div style={styles.sidebarTitle}>Worklist</div>
           {STUDIES.map((study) => (
@@ -118,7 +111,6 @@ export default function App() {
             </div>
           ))}
 
-          {/* Event log */}
           <div style={{ ...styles.sidebarTitle, marginTop: 24 }}>Event log</div>
           <div style={styles.eventLog}>
             {eventLog.length === 0 && (
@@ -135,9 +127,7 @@ export default function App() {
           </div>
         </aside>
 
-        {/* Main content - report editor */}
         <main style={styles.main}>
-          {/* Patient banner */}
           <div style={styles.patientBanner}>
             <div>
               <div style={styles.bannerName}>{selectedStudy.patientName}</div>
@@ -148,7 +138,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Study info */}
           <div style={styles.studyBanner}>
             <div style={styles.infoField}>
               <label style={styles.infoLabel}>Modality</label>
@@ -168,7 +157,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Report editor */}
           <div style={styles.editorSection}>
             <label style={styles.editorLabel}>Findings</label>
             <textarea
@@ -191,7 +179,6 @@ export default function App() {
             />
           </div>
 
-          {/* Action buttons */}
           <div style={styles.actions}>
             <button id="btn-sign" style={styles.btnPrimary} onClick={() => setReportStatus('signed')}>
               Sign report
@@ -201,10 +188,9 @@ export default function App() {
             </button>
           </div>
 
-          {/* Hint */}
           <div style={styles.hint}>
-            <strong>Try it:</strong> Type in the Findings box. The widget on the right will receive
-            your text in real-time and offer AI suggestions. Try typing "There is a 2cm nodule" or
+            <strong>Try it:</strong> Type in the Findings box — the InfoDot widget will receive your text
+            in real-time and offer AI suggestions. Try typing "There is a 2cm nodule" or
             "Right lower lobe consolidation consistent with pneumonia".
           </div>
         </main>
@@ -213,15 +199,14 @@ export default function App() {
   );
 }
 
-// --- Styles ---
 const colors = {
-  bg: '#0f1117',
-  surface: '#1a1d27',
-  surfaceHover: '#22263a',
-  border: '#2a2e3f',
-  text: '#e1e4ed',
-  textMuted: '#8b90a0',
-  accent: '#4f8ff7',
+  bg: '#1c2033',
+  surface: '#252a3d',
+  surfaceHover: '#2e3450',
+  border: '#363d5a',
+  text: '#e8ebf5',
+  textMuted: '#9ba3be',
+  accent: '#5c9bff',
   accentDim: '#2a4a8a',
   green: '#34d399',
   amber: '#f59e0b',
@@ -241,7 +226,7 @@ const styles = {
   sidebar: { width: 280, borderRight: `1px solid ${colors.border}`, padding: 16, background: colors.surface, overflowY: 'auto' },
   sidebarTitle: { fontSize: 11, fontWeight: 600, color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 12 },
   studyCard: (active) => ({ display: 'flex', gap: 10, padding: '10px 12px', borderRadius: 8, marginBottom: 6, cursor: 'pointer', background: active ? colors.accentDim : 'transparent', border: active ? `1px solid ${colors.accent}40` : `1px solid transparent`, transition: 'all 0.15s' }),
-  studyModality: (mod) => ({ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, flexShrink: 0, background: mod === 'CT' ? '#4f8ff720' : mod === 'MR' ? '#a855f720' : '#f59e0b20', color: mod === 'CT' ? '#4f8ff7' : mod === 'MR' ? '#a855f7' : '#f59e0b' }),
+  studyModality: (mod) => ({ width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, flexShrink: 0, background: mod === 'CT' ? '#5c9bff20' : mod === 'MR' ? '#a855f720' : '#f59e0b20', color: mod === 'CT' ? '#5c9bff' : mod === 'MR' ? '#a855f7' : '#f59e0b' }),
   studyInfo: { minWidth: 0 },
   patientName: { fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
   studyDesc: { fontSize: 11, color: colors.textMuted, marginTop: 2 },
@@ -249,25 +234,25 @@ const styles = {
   eventEmpty: { color: colors.textMuted, fontStyle: 'italic', padding: 8 },
   eventEntry: { padding: '6px 0', borderBottom: `1px solid ${colors.border}` },
   eventTime: { color: colors.textMuted, marginRight: 6, fontFamily: 'monospace', fontSize: 10 },
-  eventType: (type) => ({ fontSize: 10, fontWeight: 600, padding: '1px 5px', borderRadius: 3, marginRight: 6, background: type === 'text-changed' ? '#4f8ff720' : type === 'clicked' ? '#f59e0b20' : type === 'action' ? '#34d39920' : '#a855f720', color: type === 'text-changed' ? '#4f8ff7' : type === 'clicked' ? '#f59e0b' : type === 'action' ? '#34d399' : '#a855f7' }),
+  eventType: (type) => ({ fontSize: 10, fontWeight: 600, padding: '1px 5px', borderRadius: 3, marginRight: 6, background: type === 'text-changed' ? '#5c9bff20' : type === 'clicked' ? '#f59e0b20' : type === 'action' ? '#34d39920' : '#a855f720', color: type === 'text-changed' ? '#5c9bff' : type === 'clicked' ? '#f59e0b' : type === 'action' ? '#34d399' : '#a855f7' }),
   eventLabel: { fontWeight: 500 },
   eventValue: { color: colors.textMuted, marginTop: 2, wordBreak: 'break-all' },
-  main: { flex: 1, padding: 24 },
-  patientBanner: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 20px', borderRadius: 10, background: colors.surface, border: `1px solid ${colors.border}`, marginBottom: 16 },
+  main: { flex: 1, padding: 28, background: colors.bg },
+  patientBanner: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderRadius: 12, background: colors.surface, border: `1px solid ${colors.border}`, marginBottom: 16 },
   bannerName: { fontSize: 18, fontWeight: 700 },
   bannerId: { fontSize: 12, color: colors.textMuted, marginTop: 4, fontFamily: 'monospace' },
   bannerRight: { display: 'flex', alignItems: 'center', gap: 8 },
-  bannerStatus: (status) => ({ fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 6, letterSpacing: '0.5px', background: status === 'signed' ? '#34d39920' : status === 'addendum' ? '#f59e0b20' : '#4f8ff720', color: status === 'signed' ? '#34d399' : status === 'addendum' ? '#f59e0b' : '#4f8ff7' }),
-  studyBanner: { display: 'flex', gap: 24, padding: '12px 20px', borderRadius: 10, background: colors.surface, border: `1px solid ${colors.border}`, marginBottom: 20 },
+  bannerStatus: (status) => ({ fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 6, letterSpacing: '0.5px', background: status === 'signed' ? '#34d39920' : status === 'addendum' ? '#f59e0b20' : '#5c9bff20', color: status === 'signed' ? '#34d399' : status === 'addendum' ? '#f59e0b' : '#5c9bff' }),
+  studyBanner: { display: 'flex', gap: 24, padding: '14px 20px', borderRadius: 12, background: colors.surface, border: `1px solid ${colors.border}`, marginBottom: 22 },
   infoField: {},
   infoLabel: { fontSize: 10, fontWeight: 600, color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 4 },
-  infoValue: { fontSize: 13 },
+  infoValue: { fontSize: 13, color: colors.text },
   select: { background: colors.bg, border: `1px solid ${colors.border}`, borderRadius: 6, color: colors.text, padding: '4px 8px', fontSize: 13 },
-  editorSection: { marginBottom: 16 },
+  editorSection: { marginBottom: 18 },
   editorLabel: { display: 'block', fontSize: 12, fontWeight: 600, color: colors.textMuted, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' },
   textarea: { width: '100%', backgroundColor: colors.surface, border: `1px solid ${colors.border}`, borderRadius: 10, color: colors.text, WebkitTextFillColor: colors.text, forcedColorAdjust: 'none', padding: '14px 16px', fontSize: 14, fontFamily: "'SF Pro Text', -apple-system, system-ui, sans-serif", lineHeight: 1.6, resize: 'vertical', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' },
   actions: { display: 'flex', gap: 12, marginTop: 20 },
   btnPrimary: { padding: '10px 24px', borderRadius: 8, border: 'none', background: colors.accent, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' },
   btnSecondary: { padding: '10px 24px', borderRadius: 8, border: `1px solid ${colors.border}`, background: 'transparent', color: colors.text, fontSize: 14, fontWeight: 600, cursor: 'pointer' },
-  hint: { marginTop: 24, padding: '14px 18px', borderRadius: 10, background: '#4f8ff710', border: `1px solid ${colors.accent}30`, fontSize: 13, lineHeight: 1.6, color: colors.textMuted },
+  hint: { marginTop: 24, padding: '14px 18px', borderRadius: 10, background: '#5c9bff10', border: `1px solid ${colors.accent}30`, fontSize: 13, lineHeight: 1.6, color: colors.textMuted },
 };
