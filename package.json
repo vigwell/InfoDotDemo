@@ -1,0 +1,11 @@
+{
+  "name": "widget-poc",
+  "private": true,
+  "scripts": {
+    "install-all": "cd backend && npm install && cd ../host-app && npm install && cd ../widget-app && npm install",
+    "start": "bash start.sh",
+    "start:backend": "cd backend && npm start",
+    "start:host": "cd host-app && npm start",
+    "start:widget": "cd widget-app && npm start"
+  }
+}
