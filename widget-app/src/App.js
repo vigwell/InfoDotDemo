@@ -21,6 +21,7 @@ export default function App() {
   const [events, setEvents] = useState([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [lastAction, setLastAction] = useState(null);
+  const [suggestionsExpanded, setSuggestionsExpanded] = useState(true);
 
   // Settings state
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -59,6 +60,7 @@ export default function App() {
       onSuggestions: (newSuggestions) => {
         setSuggestions(newSuggestions);
         setIsAnalyzing(false);
+        if (newSuggestions.length > 0) setSuggestionsExpanded(true);
       },
     });
 
@@ -100,71 +102,66 @@ export default function App() {
     <div style={styles.shell}>
       {/* Header */}
       <div style={styles.header}>
-        <div style={styles.headerTop}>
-          <div style={styles.logoArea}>
-            <div style={styles.logoIcon}>✦</div>
-            <span style={styles.logoText}>InfoDot Assist</span>
+        <div style={styles.logoArea}>
+          <div style={styles.logoIcon}>✦</div>
+          <span style={styles.logoText}>InfoDot Assist</span>
+        </div>
+        <div style={styles.headerActions}>
+          <div style={styles.statusPill}>
+            <span style={styles.statusDot(isAnalyzing)} />
+            <span style={styles.statusLabel}>{isAnalyzing ? 'Analyzing...' : 'Watching'}</span>
           </div>
-          <div style={styles.headerActions}>
-            <div style={styles.statusPill}>
-              <span style={styles.statusDot(isAnalyzing)} />
-              <span style={styles.statusLabel}>{isAnalyzing ? 'Analyzing...' : 'Watching'}</span>
-            </div>
-            <button style={styles.settingsBtn} onClick={handleOpenSettings} title="Settings">
-              ⚙
-            </button>
-          </div>
+          <button style={styles.settingsBtn} onClick={handleOpenSettings} title="Settings">⚙</button>
         </div>
       </div>
 
-      {/* Main scrollable content */}
-      <div style={styles.content}>
-
-        {/* AI Suggestions */}
-        <div style={styles.sectionBlock}>
-          <div style={styles.sectionHeader}>
-            <span style={styles.sectionTitle}>AI Suggestions</span>
-            {suggestions.length > 0 && (
-              <span style={styles.countBadge}>{suggestions.length}</span>
-            )}
-          </div>
-
-          {isAnalyzing && suggestions.length === 0 && (
-            <div style={styles.analyzing}>
-              <div style={styles.spinner} />
-              <span>Analyzing findings...</span>
-            </div>
-          )}
-
-          {!isAnalyzing && suggestions.length === 0 && (
-            <div style={styles.emptyState}>
-              <div style={styles.emptyIcon}>✦</div>
-              <div style={styles.emptyTitle}>Ready to assist</div>
-              <div style={styles.emptyText}>
-                Start typing in the report editor. AI suggestions will appear here.
-              </div>
-              <div style={styles.emptyHints}>
-                <div style={styles.hintChip}>Try "nodule"</div>
-                <div style={styles.hintChip}>Try "pneumonia"</div>
-                <div style={styles.hintChip}>Try "fracture"</div>
-                <div style={styles.hintChip}>Try "effusion"</div>
-              </div>
-            </div>
-          )}
-
-          {suggestions.map((s) => (
-            <SuggestionCard key={s.id} suggestion={s} onApply={handleApply} />
-          ))}
-        </div>
-
-        {/* Context + Legacy Data */}
+      {/* Context — scrollable main area */}
+      <div style={styles.contextArea}>
         <ContextPanel
           elementStates={elementStates}
           studyContext={studyContext}
           events={events}
           legacyData={legacyData}
         />
+      </div>
 
+      {/* AI Suggestions — pinned bottom panel */}
+      <div style={styles.suggestionsPanel}>
+        <button style={styles.suggestionsHeader} onClick={() => setSuggestionsExpanded(o => !o)}>
+          <div style={styles.suggestionsHeaderLeft}>
+            <span style={styles.suggestionsTitle}>AI Suggestions</span>
+            {suggestions.length > 0 && (
+              <span style={styles.countBadge}>{suggestions.length}</span>
+            )}
+            {isAnalyzing && <div style={styles.miniSpinner} />}
+          </div>
+          <span style={styles.suggestionsChevron(suggestionsExpanded)}>▾</span>
+        </button>
+
+        {suggestionsExpanded && (
+          <div style={styles.suggestionsList}>
+            {!isAnalyzing && suggestions.length === 0 && (
+              <div style={styles.emptySmall}>
+                Type in the Findings field to get AI suggestions
+              </div>
+            )}
+            {suggestions.map((s) => (
+              <SuggestionCard key={s.id} suggestion={s} onApply={handleApply} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Toast */}
+      {lastAction && (
+        <div style={styles.toast}>Inserted into host editor</div>
+      )}
+
+      {/* Footer */}
+      <div style={styles.footer}>
+        <span style={styles.footerText}>InfoDot Assist</span>
+        <span style={styles.footerDot}>·</span>
+        <span style={styles.footerText}>Org: demo_org</span>
       </div>
 
       {/* Settings modal */}
@@ -193,82 +190,46 @@ export default function App() {
                 {passwordError && (
                   <div style={styles.pwError}>Incorrect password. Please try again.</div>
                 )}
-                <button style={styles.unlockBtn} onClick={handleUnlock}>
-                  Unlock
-                </button>
+                <button style={styles.unlockBtn} onClick={handleUnlock}>Unlock</button>
               </div>
             ) : (
               <div style={styles.settingsForm}>
                 <div style={styles.settingRow}>
                   <label style={styles.settingLabel}>AI Analysis Mode</label>
-                  <select
-                    style={styles.settingSelect}
-                    value={settings.aiMode}
-                    onChange={e => setSettings(s => ({ ...s, aiMode: e.target.value }))}
-                  >
+                  <select style={styles.settingSelect} value={settings.aiMode} onChange={e => setSettings(s => ({ ...s, aiMode: e.target.value }))}>
                     <option value="auto">Automatic (real-time)</option>
                     <option value="manual">On-demand only</option>
                   </select>
                 </div>
-
                 <div style={styles.settingRow}>
                   <label style={styles.settingLabel}>Interface Language</label>
-                  <select
-                    style={styles.settingSelect}
-                    value={settings.language}
-                    onChange={e => setSettings(s => ({ ...s, language: e.target.value }))}
-                  >
+                  <select style={styles.settingSelect} value={settings.language} onChange={e => setSettings(s => ({ ...s, language: e.target.value }))}>
                     <option value="en">English</option>
                     <option value="he">עברית (Hebrew)</option>
                   </select>
                 </div>
-
                 <div style={styles.settingRow}>
                   <label style={styles.settingLabel}>Confidence Threshold</label>
-                  <select
-                    style={styles.settingSelect}
-                    value={settings.confidenceThreshold}
-                    onChange={e => setSettings(s => ({ ...s, confidenceThreshold: e.target.value }))}
-                  >
+                  <select style={styles.settingSelect} value={settings.confidenceThreshold} onChange={e => setSettings(s => ({ ...s, confidenceThreshold: e.target.value }))}>
                     <option value="low">Low — show all (≥ 30%)</option>
                     <option value="medium">Medium (≥ 60%)</option>
                     <option value="high">High only (≥ 80%)</option>
                   </select>
                 </div>
-
                 <div style={styles.settingRow}>
                   <label style={styles.settingLabel}>Suggestion Types</label>
-                  <select
-                    style={styles.settingSelect}
-                    value={settings.suggestionTypes}
-                    onChange={e => setSettings(s => ({ ...s, suggestionTypes: e.target.value }))}
-                  >
+                  <select style={styles.settingSelect} value={settings.suggestionTypes} onChange={e => setSettings(s => ({ ...s, suggestionTypes: e.target.value }))}>
                     <option value="all">All types</option>
                     <option value="recommendations">Recommendations only</option>
                     <option value="templates">Templates only</option>
                   </select>
                 </div>
-
-                <button style={styles.saveBtn} onClick={handleCloseSettings}>
-                  Save &amp; Close
-                </button>
+                <button style={styles.saveBtn} onClick={handleCloseSettings}>Save &amp; Close</button>
               </div>
             )}
           </div>
         </div>
       )}
-
-      {/* Toast */}
-      {lastAction && (
-        <div style={styles.toast}>Inserted into host editor</div>
-      )}
-
-      {/* Footer */}
-      <div style={styles.footer}>
-        <span style={styles.footerText}>InfoDot Assist</span>
-        <span style={styles.footerDot}>·</span>
-        <span style={styles.footerText}>Org: demo_org</span>
-      </div>
     </div>
   );
 }
@@ -278,64 +239,91 @@ const styles = {
     height: '100vh', display: 'flex', flexDirection: 'column',
     background: '#12141e', color: '#e1e4ed',
     fontFamily: "'SF Pro Text', -apple-system, system-ui, sans-serif",
-    borderRadius: 16, overflow: 'hidden', position: 'relative',
+    overflow: 'hidden', position: 'relative',
   },
   header: {
     background: 'linear-gradient(135deg,#1a2a4a 0%,#181b28 100%)',
     borderBottom: '1px solid #4f8ff750', flexShrink: 0,
-  },
-  headerTop: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    padding: '12px 16px 12px',
+    padding: '10px 14px',
   },
   logoArea: { display: 'flex', alignItems: 'center', gap: 8 },
-  logoIcon: { fontSize: 18, color: '#5c9bff', textShadow: '0 0 8px #5c9bff' },
-  logoText: { fontSize: 15, fontWeight: 700, letterSpacing: '-0.3px', color: '#5c9bff' },
+  logoIcon: { fontSize: 16, color: '#5c9bff', textShadow: '0 0 8px #5c9bff' },
+  logoText: { fontSize: 14, fontWeight: 700, letterSpacing: '-0.3px', color: '#5c9bff' },
   headerActions: { display: 'flex', alignItems: 'center', gap: 8 },
   statusPill: {
-    display: 'flex', alignItems: 'center', gap: 6,
-    padding: '3px 10px', borderRadius: 20,
+    display: 'flex', alignItems: 'center', gap: 5,
+    padding: '3px 9px', borderRadius: 20,
     background: '#1a1d2a', border: '1px solid #2a2e3f',
   },
   statusDot: (active) => ({
-    width: 7, height: 7, borderRadius: '50%',
+    width: 6, height: 6, borderRadius: '50%',
     background: active ? '#f59e0b' : '#34d399',
-    transition: 'background 0.3s',
     animation: active ? 'pulse 1s infinite' : 'none',
   }),
-  statusLabel: { fontSize: 11, color: '#8b90a0', fontWeight: 500 },
+  statusLabel: { fontSize: 10, color: '#8b90a0', fontWeight: 500 },
   settingsBtn: {
     background: 'none', border: '1px solid #2a2e3f', color: '#8b90a0',
-    borderRadius: 8, width: 30, height: 30, cursor: 'pointer',
-    fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center',
-    transition: 'all 0.15s',
+    borderRadius: 7, width: 28, height: 28, cursor: 'pointer',
+    fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
     padding: 0,
   },
-  content: { flex: 1, overflowY: 'auto', padding: 14 },
-  sectionBlock: { marginBottom: 6 },
-  sectionHeader: {
-    display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10,
+  // Context scrollable area
+  contextArea: {
+    flex: 1, overflowY: 'auto', padding: '10px 12px 4px',
+    minHeight: 0,
   },
-  sectionTitle: {
-    fontSize: 10, fontWeight: 700, color: '#6b7080',
-    textTransform: 'uppercase', letterSpacing: '1px',
+  // Suggestions panel — pinned at bottom
+  suggestionsPanel: {
+    flexShrink: 0, borderTop: '2px solid #2e3450',
+    background: '#181b28',
   },
+  suggestionsHeader: {
+    width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    padding: '8px 14px', background: 'none', border: 'none', cursor: 'pointer',
+    textAlign: 'left', color: 'inherit',
+  },
+  suggestionsHeaderLeft: { display: 'flex', alignItems: 'center', gap: 8 },
+  suggestionsTitle: { fontSize: 11, fontWeight: 700, color: '#8b90a0', textTransform: 'uppercase', letterSpacing: '0.8px' },
   countBadge: {
     fontSize: 10, fontWeight: 700, padding: '1px 7px', borderRadius: 10,
     background: '#5c9bff20', color: '#5c9bff',
   },
-  emptyState: { textAlign: 'center', padding: '20px 10px 10px' },
-  emptyIcon: { fontSize: 30, color: '#2a2e3f', marginBottom: 10 },
-  emptyTitle: { fontSize: 15, fontWeight: 700, marginBottom: 4 },
-  emptyText: { fontSize: 12, color: '#6b7080', lineHeight: 1.5, marginBottom: 12 },
-  emptyHints: { display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' },
-  hintChip: { fontSize: 11, padding: '4px 10px', borderRadius: 6, background: '#5c9bff15', color: '#5c9bff', fontWeight: 500 },
-  analyzing: { display: 'flex', alignItems: 'center', gap: 10, padding: 16, justifyContent: 'center', fontSize: 13, color: '#8b90a0' },
-  spinner: {
-    width: 16, height: 16, border: '2px solid #2a2e3f',
+  miniSpinner: {
+    width: 12, height: 12, border: '2px solid #2a2e3f',
     borderTopColor: '#5c9bff', borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
   },
+  suggestionsChevron: (open) => ({
+    fontSize: 12, color: '#555a6e',
+    transform: open ? 'rotate(0deg)' : 'rotate(-90deg)',
+    transition: 'transform 0.2s',
+    display: 'inline-block',
+  }),
+  suggestionsList: {
+    padding: '0 12px 8px',
+    maxHeight: 220,
+    overflowY: 'auto',
+  },
+  emptySmall: {
+    fontSize: 11, color: '#555a6e', fontStyle: 'italic',
+    padding: '6px 2px 10px', textAlign: 'center',
+  },
+  toast: {
+    position: 'absolute', bottom: 44, left: 14, right: 14,
+    padding: '9px 14px', borderRadius: 8,
+    background: '#34d399', color: '#041f13',
+    fontSize: 12, fontWeight: 600, textAlign: 'center',
+    animation: 'slideUp 0.3s ease',
+    zIndex: 50,
+  },
+  footer: {
+    padding: '6px 14px', borderTop: '1px solid #2a2e3f',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+    flexShrink: 0, background: '#181b28',
+  },
+  footerText: { fontSize: 10, color: '#555a6e' },
+  footerDot: { fontSize: 10, color: '#555a6e' },
   // Settings modal
   modalOverlay: {
     position: 'absolute', inset: 0,
@@ -370,8 +358,7 @@ const styles = {
   pwError: { fontSize: 12, color: '#ef4444', marginBottom: 12 },
   unlockBtn: {
     width: '100%', padding: '10px', borderRadius: 8, border: 'none',
-    background: '#5c9bff', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer',
-    marginTop: 4,
+    background: '#5c9bff', color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 4,
   },
   settingsForm: { padding: '16px 18px 20px' },
   settingRow: { marginBottom: 16 },
@@ -386,18 +373,4 @@ const styles = {
     background: '#5c9bff', color: '#fff', fontSize: 14, fontWeight: 600,
     cursor: 'pointer', marginTop: 8,
   },
-  toast: {
-    position: 'absolute', bottom: 44, left: 14, right: 14,
-    padding: '10px 16px', borderRadius: 8,
-    background: '#34d399', color: '#041f13',
-    fontSize: 13, fontWeight: 600, textAlign: 'center',
-    animation: 'slideUp 0.3s ease',
-  },
-  footer: {
-    padding: '8px 16px', borderTop: '1px solid #2a2e3f',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
-    flexShrink: 0, background: '#181b28',
-  },
-  footerText: { fontSize: 10, color: '#555a6e' },
-  footerDot: { fontSize: 10, color: '#555a6e' },
 };

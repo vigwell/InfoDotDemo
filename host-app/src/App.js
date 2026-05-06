@@ -252,7 +252,7 @@ const styles = {
   select: { background: colors.bg, border: `1px solid ${colors.border}`, borderRadius: 6, color: colors.text, padding: '4px 8px', fontSize: 13 },
   editorSection: { marginBottom: 18 },
   editorLabel: { display: 'block', fontSize: 12, fontWeight: 600, color: colors.textMuted, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' },
-  textarea: { width: '100%', backgroundColor: colors.surface, border: `1px solid ${colors.border}`, borderRadius: 10, color: colors.text, WebkitTextFillColor: colors.text, forcedColorAdjust: 'none', padding: '14px 16px', fontSize: 14, fontFamily: "'SF Pro Text', -apple-system, system-ui, sans-serif", lineHeight: 1.6, resize: 'vertical', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' },
+  textarea: { width: '100%', backgroundColor: '#323856', border: `1px solid ${colors.border}`, borderRadius: 10, color: colors.text, WebkitTextFillColor: colors.text, forcedColorAdjust: 'none', padding: '14px 16px', fontSize: 14, fontFamily: "'SF Pro Text', -apple-system, system-ui, sans-serif", lineHeight: 1.6, resize: 'vertical', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' },
   actions: { display: 'flex', gap: 12, marginTop: 20 },
   btnPrimary: { padding: '10px 24px', borderRadius: 8, border: 'none', background: colors.accent, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' },
   btnSecondary: { padding: '10px 24px', borderRadius: 8, border: `1px solid ${colors.border}`, background: 'transparent', color: colors.text, fontSize: 14, fontWeight: 600, cursor: 'pointer' },

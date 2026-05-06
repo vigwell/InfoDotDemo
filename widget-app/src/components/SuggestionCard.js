@@ -1,10 +1,10 @@
 import React from 'react';
 
 const typeConfig = {
-  'auto-complete': { icon: '⚡', color: '#4f8ff7', bg: '#4f8ff715', label: 'AI suggestion' },
-  'recommendation': { icon: '💡', color: '#f59e0b', bg: '#f59e0b15', label: 'Recommendation' },
-  'prior-finding': { icon: '📋', color: '#a855f7', bg: '#a855f715', label: 'Prior finding' },
-  'template': { icon: '📄', color: '#34d399', bg: '#34d39915', label: 'Template' },
+  'auto-complete': { color: '#5c9bff', bg: '#5c9bff15', label: 'AI suggestion' },
+  'recommendation': { color: '#f59e0b', bg: '#f59e0b15', label: 'Recommendation' },
+  'prior-finding': { color: '#a855f7', bg: '#a855f715', label: 'Prior finding' },
+  'template': { color: '#34d399', bg: '#34d39915', label: 'Template' },
 };
 
 export default function SuggestionCard({ suggestion, onApply }) {
@@ -14,7 +14,7 @@ export default function SuggestionCard({ suggestion, onApply }) {
     <div style={styles.card}>
       <div style={styles.header}>
         <span style={{ ...styles.badge, background: config.bg, color: config.color }}>
-          {config.icon} {config.label}
+          {config.label}
         </span>
         {suggestion.confidence && (
           <span style={styles.confidence}>
@@ -31,7 +31,7 @@ export default function SuggestionCard({ suggestion, onApply }) {
         )}
         {suggestion.type === 'template' && (
           <button style={styles.btnApply} onClick={() => onApply({ ...suggestion, target: 'findings-editor' })}>
-            Apply template
+            Apply
           </button>
         )}
         <button style={styles.btnCopy} onClick={() => navigator.clipboard.writeText(suggestion.text)}>
@@ -44,59 +44,57 @@ export default function SuggestionCard({ suggestion, onApply }) {
 
 const styles = {
   card: {
-    background: '#1a1d27',
-    border: '1px solid #2a2e3f',
-    borderRadius: 10,
-    padding: 14,
-    marginBottom: 10,
-    transition: 'border-color 0.2s',
+    background: '#242840',
+    border: '1px solid #2e3450',
+    borderRadius: 8,
+    padding: '10px 12px',
+    marginBottom: 7,
   },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 5,
   },
   badge: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: 600,
-    padding: '2px 8px',
-    borderRadius: 5,
+    padding: '2px 7px',
+    borderRadius: 4,
   },
   confidence: {
-    fontSize: 11,
-    color: '#8b90a0',
+    fontSize: 10,
+    color: '#6b7080',
     fontFamily: 'monospace',
   },
   text: {
-    fontSize: 13,
-    lineHeight: 1.6,
+    fontSize: 12,
+    lineHeight: 1.5,
     color: '#c8cbd6',
-    marginBottom: 10,
+    marginBottom: 8,
     whiteSpace: 'pre-wrap',
   },
   actions: {
     display: 'flex',
-    gap: 8,
+    gap: 6,
   },
   btnApply: {
-    padding: '5px 14px',
-    borderRadius: 6,
+    padding: '4px 12px',
+    borderRadius: 5,
     border: 'none',
-    background: '#4f8ff7',
+    background: '#5c9bff',
     color: '#fff',
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 600,
     cursor: 'pointer',
-    transition: 'opacity 0.15s',
   },
   btnCopy: {
-    padding: '5px 14px',
-    borderRadius: 6,
-    border: '1px solid #2a2e3f',
+    padding: '4px 12px',
+    borderRadius: 5,
+    border: '1px solid #2e3450',
     background: 'transparent',
     color: '#8b90a0',
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 500,
     cursor: 'pointer',
   },

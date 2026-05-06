@@ -1,15 +1,62 @@
 import React, { useState } from 'react';
 import { openDocument } from '../utils/openDocument';
 
-export default function ContextPanel({ elementStates, studyContext, events, legacyData }) {
-  const [chameleonOpen, setChameleonOpen] = useState(false);
-  const [clinipharmOpen, setClinipharmOpen] = useState(false);
-  const [contextOpen, setContextOpen] = useState(false);
+export default function ContextPanel({ elementStates, studyContext, legacyData }) {
+  const [chameleonOpen, setChameleonOpen] = useState(true);
+  const [clinipharmOpen, setClinipharmOpen] = useState(true);
+  const [contextOpen, setContextOpen] = useState(true);
 
   const patientName = studyContext?.patientName || 'Unknown Patient';
 
   return (
     <div style={styles.container}>
+
+      {/* Study Context */}
+      <CollapsibleSection
+        icon="📡"
+        title="Study context"
+        subtitle="Live data"
+        accent="#5c9bff"
+        open={contextOpen}
+        onToggle={() => setContextOpen(o => !o)}
+      >
+        {studyContext?.patientId ? (
+          <>
+            <div style={styles.contextGrid}>
+              <ContextItem label="Patient" value={studyContext.patientId} />
+              <ContextItem label="Modality" value={studyContext.modality} />
+              <ContextItem label="Body part" value={studyContext.bodyPart} />
+            </div>
+            {studyContext.indication && (
+              <div style={styles.indication}>
+                <span style={styles.indicationLabel}>Indication: </span>
+                {studyContext.indication}
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={styles.empty}>Waiting for study context...</div>
+        )}
+
+        {Object.keys(elementStates).length > 0 && (
+          <div style={{ marginTop: 10 }}>
+            <div style={styles.subLabel}>Live editor values</div>
+            {Object.entries(elementStates).map(([label, data]) => (
+              <div key={label} style={styles.elementRow}>
+                <div style={styles.elementHeader}>
+                  <span style={styles.elementLabel}>{label}</span>
+                  <span style={styles.elementId}>#{data.elementId}</span>
+                </div>
+                <div style={styles.elementValue}>
+                  {data.value
+                    ? data.value.length > 120 ? data.value.substring(0, 120) + '…' : data.value
+                    : <em style={{ color: '#555a6e' }}>(empty)</em>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </CollapsibleSection>
 
       {/* Chameleon — Documents */}
       <CollapsibleSection
@@ -23,7 +70,7 @@ export default function ContextPanel({ elementStates, studyContext, events, lega
       >
         {legacyData?.chameleon?.documents?.length > 0 ? (
           <div>
-            {legacyData.chameleon.documents.map((doc, i) => (
+            {legacyData.chameleon.documents.map((doc) => (
               <button
                 key={doc.id}
                 style={styles.docRow}
@@ -76,70 +123,6 @@ export default function ContextPanel({ elementStates, studyContext, events, lega
         )}
       </CollapsibleSection>
 
-      {/* Study Context */}
-      <CollapsibleSection
-        icon="📡"
-        title="Study context"
-        subtitle="Live data"
-        accent="#5c9bff"
-        open={contextOpen}
-        onToggle={() => setContextOpen(o => !o)}
-      >
-        {studyContext?.patientId ? (
-          <>
-            <div style={styles.contextGrid}>
-              <ContextItem label="Patient" value={studyContext.patientId} />
-              <ContextItem label="Modality" value={studyContext.modality} />
-              <ContextItem label="Body part" value={studyContext.bodyPart} />
-            </div>
-            {studyContext.indication && (
-              <div style={styles.indication}>
-                <span style={styles.indicationLabel}>Indication: </span>
-                {studyContext.indication}
-              </div>
-            )}
-          </>
-        ) : (
-          <div style={styles.empty}>Waiting for study context...</div>
-        )}
-
-        {Object.keys(elementStates).length > 0 && (
-          <div style={{ marginTop: 10 }}>
-            <div style={styles.subLabel}>Live editor values</div>
-            {Object.entries(elementStates).map(([label, data]) => (
-              <div key={label} style={styles.elementRow}>
-                <div style={styles.elementHeader}>
-                  <span style={styles.elementLabel}>{label}</span>
-                  <span style={styles.elementId}>#{data.elementId}</span>
-                </div>
-                <div style={styles.elementValue}>
-                  {data.value
-                    ? data.value.length > 80 ? data.value.substring(0, 80) + '…' : data.value
-                    : <em style={{ color: '#555a6e' }}>(empty)</em>}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {events.length > 0 && (
-          <div style={{ marginTop: 10 }}>
-            <div style={styles.subLabel}>Recent events</div>
-            {events.slice(0, 6).map((evt, i) => (
-              <div key={i} style={styles.eventRow}>
-                <span style={styles.eventDot(evt.type)} />
-                <span style={styles.eventText}>
-                  {evt.type === 'text' && `${evt.label} changed`}
-                  {evt.type === 'click' && `Clicked "${evt.label}"`}
-                  {evt.type === 'select' && `${evt.label} → ${evt.value}`}
-                  {evt.type === 'context' && 'Context updated'}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </CollapsibleSection>
-
     </div>
   );
 }
@@ -155,7 +138,7 @@ function CollapsibleSection({ icon, title, subtitle, accent, open, onToggle, bad
             <span style={sectionStyles.subtitle}> — {subtitle}</span>
           </div>
           {badge > 0 && (
-            <span style={{ ...sectionStyles.badge, background: accent + '22', color: accent }}>{badge}</span>
+            <span style={{ ...sectionStyles.badge, background: (accent || '#5c9bff') + '22', color: accent || '#5c9bff' }}>{badge}</span>
           )}
         </div>
         <span style={sectionStyles.chevron(open)}>▾</span>
@@ -179,12 +162,12 @@ function ContextItem({ label, value }) {
 }
 
 const sectionStyles = {
-  wrapper: { marginBottom: 8, borderRadius: 10, overflow: 'hidden', border: '1px solid #252a3d' },
+  wrapper: { marginBottom: 8, borderRadius: 10, overflow: 'hidden', border: '1px solid #2e3450' },
   header: (open) => ({
     width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    padding: '9px 12px', background: open ? '#1e2235' : '#191c2a',
+    padding: '9px 12px', background: open ? '#222640' : '#1d2038',
     border: 'none', cursor: 'pointer', textAlign: 'left',
-    borderBottom: open ? '1px solid #252a3d' : 'none',
+    borderBottom: open ? '1px solid #2e3450' : 'none',
     transition: 'background 0.15s',
   }),
   headerLeft: { display: 'flex', alignItems: 'center', gap: 8 },
@@ -198,14 +181,14 @@ const sectionStyles = {
     transition: 'transform 0.2s',
     display: 'inline-block',
   }),
-  body: { padding: '10px 12px', background: '#191c2a' },
+  body: { padding: '10px 12px', background: '#1d2038' },
 };
 
 const styles = {
   container: { paddingBottom: 4 },
   docRow: {
     display: 'flex', alignItems: 'center', gap: 10,
-    width: '100%', background: '#1a1d27', border: '1px solid #2a2e3f',
+    width: '100%', background: '#272b42', border: '1px solid #2e3450',
     borderRadius: 8, padding: '9px 12px', marginBottom: 6,
     cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, background 0.15s',
     color: 'inherit',
@@ -215,9 +198,7 @@ const styles = {
   docTitle: { fontSize: 12, fontWeight: 600, color: '#c8cbd6', marginBottom: 2 },
   docDate: { fontSize: 10, color: '#6b7080', fontFamily: 'monospace' },
   docOpenIcon: { fontSize: 13, color: '#a855f7', flexShrink: 0, fontWeight: 700 },
-  medRow: {
-    background: '#1a1d27', borderRadius: 8, padding: '7px 10px', marginBottom: 5,
-  },
+  medRow: { background: '#272b42', borderRadius: 8, padding: '7px 10px', marginBottom: 5 },
   medName: { fontSize: 12, fontWeight: 600, color: '#34d399', marginBottom: 3 },
   medDetails: { fontSize: 11, color: '#8b90a0', display: 'flex', flexWrap: 'wrap', gap: 4 },
   medDose: { color: '#c8cbd6' },
@@ -225,19 +206,16 @@ const styles = {
   medSep: { color: '#363d5a' },
   medIndication: { color: '#8b90a0', fontStyle: 'italic' },
   contextGrid: { display: 'flex', gap: 6, marginBottom: 8 },
-  contextItem: { flex: 1, background: '#1a1d27', borderRadius: 8, padding: '7px 9px' },
+  contextItem: { flex: 1, background: '#272b42', borderRadius: 8, padding: '7px 9px' },
   contextLabel: { fontSize: 9, color: '#6b7080', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' },
   contextValue: { fontSize: 12, fontWeight: 600, color: '#e1e4ed', marginTop: 2 },
-  indication: { fontSize: 11, color: '#8b90a0', background: '#1a1d27', borderRadius: 8, padding: '7px 10px' },
+  indication: { fontSize: 11, color: '#8b90a0', background: '#272b42', borderRadius: 8, padding: '7px 10px' },
   indicationLabel: { fontWeight: 600, color: '#6b7080' },
   subLabel: { fontSize: 9, fontWeight: 700, color: '#555a6e', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 6 },
-  elementRow: { background: '#1a1d27', borderRadius: 8, padding: '7px 10px', marginBottom: 5 },
+  elementRow: { background: '#272b42', borderRadius: 8, padding: '7px 10px', marginBottom: 5 },
   elementHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 },
   elementLabel: { fontSize: 11, fontWeight: 600, color: '#5c9bff' },
   elementId: { fontSize: 9, color: '#555a6e', fontFamily: 'monospace' },
   elementValue: { fontSize: 11, color: '#c8cbd6', lineHeight: 1.4, wordBreak: 'break-word' },
-  eventRow: { display: 'flex', alignItems: 'center', gap: 7, padding: '3px 0' },
-  eventDot: (type) => ({ width: 5, height: 5, borderRadius: '50%', flexShrink: 0, background: type === 'text' ? '#5c9bff' : type === 'click' ? '#f59e0b' : type === 'select' ? '#a855f7' : '#34d399' }),
-  eventText: { fontSize: 11, color: '#8b90a0' },
   empty: { fontSize: 12, color: '#555a6e', fontStyle: 'italic', padding: '4px 0' },
 };

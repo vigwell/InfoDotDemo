@@ -122,7 +122,7 @@ export function init(config = {}) {
   wrapper = document.createElement('div');
   wrapper.id = 'infodot-widget-wrapper';
   wrapper.style.cssText =
-    'position:fixed;bottom:80px;right:20px;width:380px;border-radius:16px;' +
+    'position:fixed;bottom:16px;right:20px;width:380px;border-radius:16px;' +
     'box-shadow:0 8px 48px rgba(92,155,255,0.3),0 2px 16px rgba(0,0,0,0.6);z-index:999999;overflow:hidden;user-select:none;' +
     'border:2px solid #5c9bff;transition:width 0.2s,border-radius 0.2s;';
 
@@ -177,7 +177,7 @@ export function init(config = {}) {
   iframe.src = `${WIDGET_ORIGIN}?org=${orgKey}`;
   iframe.id = 'infodot-widget';
   iframe.allow = 'microphone';
-  iframe.style.cssText = 'width:380px;height:520px;border:none;display:block;background:#12141e;';
+  iframe.style.cssText = 'width:380px;height:660px;border:none;display:block;background:#12141e;';
 
   wrapper.appendChild(titleBar);
   wrapper.appendChild(iframe);
