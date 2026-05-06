@@ -178,7 +178,7 @@ export function init(config = {}) {
   iframe.src = `${WIDGET_ORIGIN}?org=${orgKey}`;
   iframe.id = 'infodot-widget';
   iframe.allow = 'microphone';
-  iframe.style.cssText = 'width:380px;height:660px;border:none;display:block;background:#12141e;';
+  iframe.style.cssText = 'width:380px;height:660px;border:none;display:block;background:#f2f4f7;';
 
   wrapper.appendChild(titleBar);
   wrapper.appendChild(iframe);

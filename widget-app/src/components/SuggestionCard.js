@@ -1,10 +1,10 @@
 import React from 'react';
 
 const typeConfig = {
-  'auto-complete':  { color: '#4f83ff', bg: 'rgba(79,131,255,0.1)',  border: 'rgba(79,131,255,0.22)',  label: 'AI Suggestion' },
-  'recommendation': { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.22)', label: 'Recommendation' },
-  'prior-finding':  { color: '#9b72f8', bg: 'rgba(155,114,248,0.1)', border: 'rgba(155,114,248,0.22)', label: 'Prior Finding' },
-  'template':       { color: '#2dd4bf', bg: 'rgba(45,212,191,0.1)', border: 'rgba(45,212,191,0.22)', label: 'Template' },
+  'auto-complete':  { color: '#4f6fff', bg: '#eef1ff',  border: '#c7d0ff',  label: 'AI Suggestion' },
+  'recommendation': { color: '#d97706', bg: '#fef9ec', border: '#fcd97a', label: 'Recommendation' },
+  'prior-finding':  { color: '#7c3aed', bg: '#f3f0ff', border: '#c4b5fd', label: 'Prior Finding' },
+  'template':       { color: '#0d9488', bg: '#f0fdfb', border: '#99f6e4', label: 'Template' },
 };
 
 export default function SuggestionCard({ suggestion, onApply }) {
@@ -40,8 +40,8 @@ export default function SuggestionCard({ suggestion, onApply }) {
 
 const s = {
   card: {
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #dde2ea',
     borderRadius: 10,
     padding: '10px 12px',
     marginBottom: 7,
@@ -49,17 +49,17 @@ const s = {
   },
   head: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   badge: { fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 5, letterSpacing: '0.2px' },
-  confidence: { fontSize: 10, color: '#3d4a65', fontFamily: 'monospace', fontWeight: 600 },
-  text: { fontSize: 12, lineHeight: 1.55, color: '#a8b8d0', marginBottom: 9, whiteSpace: 'pre-wrap' },
+  confidence: { fontSize: 10, color: '#a0abc0', fontFamily: 'monospace', fontWeight: 600 },
+  text: { fontSize: 12, lineHeight: 1.55, color: '#3a4a62', marginBottom: 9, whiteSpace: 'pre-wrap' },
   actions: { display: 'flex', gap: 6 },
   btn: { padding: '5px 13px', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer', border: 'none' },
   btnPrimary: {
-    background: 'linear-gradient(90deg,#4f83ff,#7c5af6)',
-    color: '#fff', boxShadow: '0 2px 8px rgba(79,131,255,0.3)',
+    background: '#4f6fff',
+    color: '#fff', boxShadow: '0 2px 6px rgba(79,111,255,0.25)',
   },
   btnGhost: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.09)',
-    color: '#7b88a8',
+    background: '#f2f4f7',
+    border: '1px solid #dde2ea',
+    color: '#6b7a99',
   },
 };

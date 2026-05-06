@@ -6,7 +6,7 @@ import { openDocument } from '../utils/openDocument';
 const ChevronIcon = ({ open }) => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
     strokeLinecap="round" strokeLinejoin="round"
-    style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.22s ease', display: 'block', color: '#3d4a65' }}>
+    style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)', transition: 'transform 0.22s ease', display: 'block', color: '#a0abc0' }}>
     <polyline points="6 9 12 15 18 9"/>
   </svg>
 );
@@ -192,76 +192,77 @@ const s = {
 
   // Section
   sectionWrap: {
-    marginBottom: 8, borderRadius: 11, overflow: 'hidden',
-    border: '1px solid rgba(255,255,255,0.07)',
+    marginBottom: 8, borderRadius: 10, overflow: 'hidden',
+    border: '1px solid #dde2ea',
     borderLeft: '3px solid transparent',
+    background: '#ffffff',
   },
   sectionHead: {
     width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     padding: '10px 13px', border: 'none', cursor: 'pointer', textAlign: 'left',
-    transition: 'background 0.15s', color: 'inherit',
+    transition: 'background 0.15s', color: 'inherit', background: 'transparent',
   },
   sectionHeadLeft: { display: 'flex', alignItems: 'center', gap: 9 },
   accentDot: { width: 7, height: 7, borderRadius: '50%', flexShrink: 0 },
-  sectionLabel: { fontSize: 12, fontWeight: 700, color: '#c8d8ff' },
-  sectionSub: { fontSize: 10, color: '#4a5980' },
+  sectionLabel: { fontSize: 12, fontWeight: 700, color: '#1e2530' },
+  sectionSub: { fontSize: 10, color: '#8a99b8' },
   sectionBadge: { fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 9 },
-  sectionBody: { padding: '10px 13px 12px', background: 'rgba(0,0,0,0.15)' },
+  sectionBody: { padding: '10px 13px 12px', background: '#f7f9fc' },
 
   // Study context
   statGrid: { display: 'flex', gap: 6, marginBottom: 8 },
   statCard: {
     flex: 1, borderRadius: 8, padding: '8px 10px',
-    background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',
+    background: '#ffffff', border: '1px solid #dde2ea',
   },
   statLabel: { fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 },
-  statValue: { fontSize: 12, fontWeight: 700, color: '#dce6f8' },
+  statValue: { fontSize: 12, fontWeight: 700, color: '#1e2530' },
   indicationBox: {
-    background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',
+    background: '#ffffff', border: '1px solid #dde2ea',
     borderRadius: 8, padding: '8px 10px',
   },
-  indicationLabel: { fontSize: 9, fontWeight: 700, color: '#4a5980', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 3 },
-  indicationText: { fontSize: 11, color: '#8b96b0', lineHeight: 1.5 },
-  miniLabel: { fontSize: 9, fontWeight: 700, color: '#2d3550', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 6 },
+  indicationLabel: { fontSize: 9, fontWeight: 700, color: '#8a99b8', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 3 },
+  indicationText: { fontSize: 11, color: '#4a5a72', lineHeight: 1.5 },
+  miniLabel: { fontSize: 9, fontWeight: 700, color: '#b0bcc8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 6 },
   editorRow: {
-    background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+    background: '#ffffff', border: '1px solid #dde2ea',
     borderRadius: 8, padding: '7px 10px', marginBottom: 5,
   },
   editorRowHead: { display: 'flex', justifyContent: 'space-between', marginBottom: 3 },
-  editorLabel: { fontSize: 11, fontWeight: 600, color: '#4f83ff' },
-  editorId: { fontSize: 9, color: '#2d3550', fontFamily: 'monospace' },
-  editorVal: { fontSize: 11, color: '#8b96b0', lineHeight: 1.4, wordBreak: 'break-word' },
+  editorLabel: { fontSize: 11, fontWeight: 600, color: '#4f6fff' },
+  editorId: { fontSize: 9, color: '#b0bcc8', fontFamily: 'monospace' },
+  editorVal: { fontSize: 11, color: '#4a5a72', lineHeight: 1.4, wordBreak: 'break-word' },
 
   // Document row
   docRow: {
     display: 'flex', alignItems: 'center', gap: 11, width: '100%',
-    background: 'rgba(155,114,248,0.06)', border: '1px solid rgba(155,114,248,0.15)',
+    background: '#f3f0ff', border: '1px solid #c4b5fd50',
     borderRadius: 9, padding: '10px 12px', marginBottom: 6,
     cursor: 'pointer', textAlign: 'left', color: 'inherit', transition: 'background 0.15s',
   },
   docIconWrap: {
     width: 34, height: 38, borderRadius: 7, flexShrink: 0,
-    background: 'rgba(155,114,248,0.1)', border: '1px solid rgba(155,114,248,0.2)',
+    background: '#ede9fe', border: '1px solid #c4b5fd60',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
   docInfo: { flex: 1, minWidth: 0 },
-  docTitle: { fontSize: 12, fontWeight: 600, color: '#c8d8ff', marginBottom: 3 },
-  docDate: { fontSize: 10, color: '#4a5980', fontFamily: 'monospace' },
+  docTitle: { fontSize: 12, fontWeight: 600, color: '#1e2530', marginBottom: 3 },
+  docDate: { fontSize: 10, color: '#8a99b8', fontFamily: 'monospace' },
 
   // Medicine row
   medRow: {
     display: 'flex', gap: 10, alignItems: 'stretch', marginBottom: 6,
-    background: 'rgba(45,212,191,0.05)', border: '1px solid rgba(45,212,191,0.12)',
+    background: '#f0fdfb', border: '1px solid #99f6e440',
     borderRadius: 9, overflow: 'hidden',
   },
-  medAccent: { width: 3, flexShrink: 0, background: '#2dd4bf', opacity: 0.7 },
+  medAccent: { width: 3, flexShrink: 0, background: '#14b8a6' },
   medBody: { flex: 1, padding: '8px 10px 8px 0' },
-  medName: { fontSize: 12, fontWeight: 700, color: '#dce6f8', marginBottom: 3 },
+  medName: { fontSize: 12, fontWeight: 700, color: '#1e2530', marginBottom: 3 },
   medMeta: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 5 },
-  medDose: { fontSize: 10, color: '#8b96b0' },
-  medFreq: { fontSize: 10, color: '#8b96b0' },
-  medInd: { fontSize: 10, color: '#4a5980', fontStyle: 'italic' },
-  metaSep: { width: 3, height: 3, borderRadius: '50%', background: '#2d3550', flexShrink: 0, display: 'inline-block' },
+  medDose: { fontSize: 10, color: '#4a5a72' },
+  medFreq: { fontSize: 10, color: '#4a5a72' },
+  medInd: { fontSize: 10, color: '#8a99b8', fontStyle: 'italic' },
+  metaSep: { width: 3, height: 3, borderRadius: '50%', background: '#dde2ea', flexShrink: 0, display: 'inline-block' },
 
-  emptyMsg: { fontSize: 11, color: '#2d3550', fontStyle: 'italic', padding: '4px 0' },
+  emptyMsg: { fontSize: 11, color: '#b0bcc8', fontStyle: 'italic', padding: '4px 0' },
 };
