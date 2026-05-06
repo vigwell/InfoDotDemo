@@ -1,34 +1,48 @@
 import React, { useState } from 'react';
+import { openDocument } from '../utils/openDocument';
 
 export default function ContextPanel({ elementStates, studyContext, events, legacyData }) {
   const [chameleonOpen, setChameleonOpen] = useState(false);
   const [clinipharmOpen, setClinipharmOpen] = useState(false);
   const [contextOpen, setContextOpen] = useState(false);
 
+  const patientName = studyContext?.patientName || 'Unknown Patient';
+
   return (
     <div style={styles.container}>
 
-      {/* Chameleon — Anamneses */}
+      {/* Chameleon — Documents */}
       <CollapsibleSection
         icon="🏥"
         title="Chameleon"
-        subtitle="Anamneses"
+        subtitle="Clinical documents"
         accent="#a855f7"
         open={chameleonOpen}
         onToggle={() => setChameleonOpen(o => !o)}
-        badge={legacyData?.chameleon?.anamneses?.length || 0}
+        badge={legacyData?.chameleon?.documents?.length || 0}
       >
-        {legacyData?.chameleon?.anamneses?.length > 0 ? (
-          <ul style={styles.anamnesislist}>
-            {legacyData.chameleon.anamneses.map((item, i) => (
-              <li key={i} style={styles.anamnesisItem}>
-                <span style={styles.bullet} />
-                {item}
-              </li>
+        {legacyData?.chameleon?.documents?.length > 0 ? (
+          <div>
+            {legacyData.chameleon.documents.map((doc, i) => (
+              <button
+                key={doc.id}
+                style={styles.docRow}
+                onClick={() => openDocument(doc, patientName)}
+                title="Click to open document"
+              >
+                <div style={styles.docIcon}>
+                  {doc.type === 'nurse' ? '📋' : '🔬'}
+                </div>
+                <div style={styles.docInfo}>
+                  <div style={styles.docTitle}>{doc.title}</div>
+                  <div style={styles.docDate}>{doc.date}</div>
+                </div>
+                <div style={styles.docOpenIcon}>↗</div>
+              </button>
             ))}
-          </ul>
+          </div>
         ) : (
-          <div style={styles.empty}>No anamnesis data available for this patient.</div>
+          <div style={styles.empty}>No documents available for this patient.</div>
         )}
       </CollapsibleSection>
 
@@ -64,7 +78,7 @@ export default function ContextPanel({ elementStates, studyContext, events, lega
 
       {/* Study Context */}
       <CollapsibleSection
-        icon="📋"
+        icon="📡"
         title="Study context"
         subtitle="Live data"
         accent="#5c9bff"
@@ -133,7 +147,7 @@ export default function ContextPanel({ elementStates, studyContext, events, lega
 function CollapsibleSection({ icon, title, subtitle, accent, open, onToggle, badge, children }) {
   return (
     <div style={sectionStyles.wrapper}>
-      <button style={sectionStyles.header(accent, open)} onClick={onToggle}>
+      <button style={sectionStyles.header(open)} onClick={onToggle}>
         <div style={sectionStyles.headerLeft}>
           <span style={sectionStyles.icon}>{icon}</span>
           <div>
@@ -141,7 +155,7 @@ function CollapsibleSection({ icon, title, subtitle, accent, open, onToggle, bad
             <span style={sectionStyles.subtitle}> — {subtitle}</span>
           </div>
           {badge > 0 && (
-            <span style={{ ...sectionStyles.badge, background: accent + '25', color: accent }}>{badge}</span>
+            <span style={{ ...sectionStyles.badge, background: accent + '22', color: accent }}>{badge}</span>
           )}
         </div>
         <span style={sectionStyles.chevron(open)}>▾</span>
@@ -166,7 +180,7 @@ function ContextItem({ label, value }) {
 
 const sectionStyles = {
   wrapper: { marginBottom: 8, borderRadius: 10, overflow: 'hidden', border: '1px solid #252a3d' },
-  header: (accent, open) => ({
+  header: (open) => ({
     width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     padding: '9px 12px', background: open ? '#1e2235' : '#191c2a',
     border: 'none', cursor: 'pointer', textAlign: 'left',
@@ -189,15 +203,18 @@ const sectionStyles = {
 
 const styles = {
   container: { paddingBottom: 4 },
-  anamnesislist: { listStyle: 'none', margin: 0, padding: 0 },
-  anamnesisItem: {
-    display: 'flex', gap: 8, alignItems: 'flex-start',
-    fontSize: 12, color: '#c8cbd6', lineHeight: 1.55, marginBottom: 7,
+  docRow: {
+    display: 'flex', alignItems: 'center', gap: 10,
+    width: '100%', background: '#1a1d27', border: '1px solid #2a2e3f',
+    borderRadius: 8, padding: '9px 12px', marginBottom: 6,
+    cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s, background 0.15s',
+    color: 'inherit',
   },
-  bullet: {
-    width: 5, height: 5, borderRadius: '50%', background: '#a855f7',
-    flexShrink: 0, marginTop: 5,
-  },
+  docIcon: { fontSize: 18, flexShrink: 0 },
+  docInfo: { flex: 1, minWidth: 0 },
+  docTitle: { fontSize: 12, fontWeight: 600, color: '#c8cbd6', marginBottom: 2 },
+  docDate: { fontSize: 10, color: '#6b7080', fontFamily: 'monospace' },
+  docOpenIcon: { fontSize: 13, color: '#a855f7', flexShrink: 0, fontWeight: 700 },
   medRow: {
     background: '#1a1d27', borderRadius: 8, padding: '7px 10px', marginBottom: 5,
   },

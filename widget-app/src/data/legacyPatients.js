@@ -1,11 +1,9 @@
 export const LEGACY_DATA = {
   'P-78432': {
     chameleon: {
-      anamneses: [
-        'Chronic smoker – 20 pack-years. Quit 3 years ago.',
-        'Hypertension diagnosed 8 years ago, on antihypertensive therapy.',
-        'Family history: father deceased from lung carcinoma (age 67).',
-        'Progressive dyspnea on exertion ~3 months with occasional productive cough.',
+      documents: [
+        { id: 'nurse_p78432_1', date: '28-04-2025 08:15', title: 'Nurse Report', type: 'nurse' },
+        { id: 'surgery_p78432_1', date: '30-04-2025 11:40', title: 'Surgery Report', type: 'surgery' },
       ],
     },
     clinipharm: {
@@ -19,11 +17,9 @@ export const LEGACY_DATA = {
   },
   'P-91205': {
     chameleon: {
-      anamneses: [
-        'Non-smoker, no known cardiopulmonary disease.',
-        'Type 2 diabetes mellitus – well controlled on oral agents.',
-        'Hypertension – mild, on low-dose ACE inhibitor.',
-        'Scheduled for elective left knee arthroplasty. Good exercise tolerance.',
+      documents: [
+        { id: 'nurse_p91205_1', date: '02-05-2025 07:50', title: 'Nurse Report', type: 'nurse' },
+        { id: 'surgery_p91205_1', date: '03-05-2025 09:20', title: 'Surgery Report', type: 'surgery' },
       ],
     },
     clinipharm: {
@@ -35,11 +31,9 @@ export const LEGACY_DATA = {
   },
   'P-33187': {
     chameleon: {
-      anamneses: [
-        'Migraines since age 18, predominantly right-sided with visual aura.',
-        'Increased frequency over 2 months (3–4 episodes/week).',
-        'No focal neurological deficits on examination. No recent head trauma.',
-        'Family history: maternal aunt – intracranial aneurysm.',
+      documents: [
+        { id: 'nurse_p33187_1', date: '01-05-2025 14:30', title: 'Nurse Report', type: 'nurse' },
+        { id: 'surgery_p33187_1', date: '04-05-2025 10:05', title: 'Surgery Report', type: 'surgery' },
       ],
     },
     clinipharm: {
@@ -52,11 +46,9 @@ export const LEGACY_DATA = {
   },
   'P-55921': {
     chameleon: {
-      anamneses: [
-        "Known Crohn's disease (terminal ileum), diagnosed 6 years ago.",
-        'Currently in clinical remission; last flare 18 months ago.',
-        'Acute-onset right iliac fossa pain, fever 38.4°C, rebound tenderness.',
-        'Last colonoscopy 14 months ago – no strictures or active disease.',
+      documents: [
+        { id: 'nurse_p55921_1', date: '05-05-2025 06:45', title: 'Nurse Report', type: 'nurse' },
+        { id: 'surgery_p55921_1', date: '05-05-2025 13:15', title: 'Surgery Report', type: 'surgery' },
       ],
     },
     clinipharm: {

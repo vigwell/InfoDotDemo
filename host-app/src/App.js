@@ -40,6 +40,7 @@ export default function App() {
 
         WidgetSDK.setContext({
           patientId: STUDIES[0].patientId,
+          patientName: STUDIES[0].patientName,
           studyUid: STUDIES[0].id,
           modality: STUDIES[0].modality,
           bodyPart: STUDIES[0].bodyPart,
@@ -73,6 +74,7 @@ export default function App() {
     if (impressionRef.current) impressionRef.current.value = '';
     WidgetSDK.setContext({
       patientId: study.patientId,
+      patientName: study.patientName,
       studyUid: study.id,
       modality: study.modality,
       bodyPart: study.bodyPart,

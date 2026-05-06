@@ -17,6 +17,7 @@ let readyCallback = null;
 let eventLogCallback = null;
 let isMinimized = false;
 let flickerTimer = null;
+let titleText = null;
 
 function send(msg) {
   if (iframe && iframe.contentWindow) {
@@ -79,9 +80,11 @@ function setMinimized(min) {
     if (titleBar) {
       titleBar.style.borderBottom = 'none';
       titleBar.style.cursor = 'pointer';
+      titleBar.style.height = '42px';
     }
+    if (titleText) titleText.style.display = 'inline';
     if (wrapper) {
-      wrapper.style.width = '200px';
+      wrapper.style.width = '210px';
       wrapper.style.bottom = '20px';
       wrapper.style.right = '20px';
       wrapper.style.top = 'auto';
@@ -93,9 +96,11 @@ function setMinimized(min) {
     stopFlicker();
     if (iframe) iframe.style.display = 'block';
     if (titleBar) {
-      titleBar.style.borderBottom = '1px solid #4f8ff750';
+      titleBar.style.borderBottom = '1px solid #2a2e3f';
       titleBar.style.cursor = 'move';
+      titleBar.style.height = '28px';
     }
+    if (titleText) titleText.style.display = 'none';
     if (wrapper) {
       wrapper.style.width = '380px';
       wrapper.style.borderRadius = '16px';
@@ -123,13 +128,13 @@ export function init(config = {}) {
 
   titleBar = document.createElement('div');
   titleBar.style.cssText =
-    'height:40px;background:linear-gradient(135deg,#1a2a4a 0%,#1a1d27 100%);border-bottom:1px solid #4f8ff750;' +
-    'display:flex;align-items:center;padding:0 12px;cursor:move;justify-content:space-between;flex-shrink:0;position:relative;';
+    'height:28px;background:linear-gradient(135deg,#1a2a4a 0%,#1a1d27 100%);border-bottom:1px solid #2a2e3f;' +
+    'display:flex;align-items:center;padding:0 8px;cursor:move;justify-content:space-between;flex-shrink:0;position:relative;';
 
   const titleLeft = document.createElement('div');
   titleLeft.style.cssText = 'display:flex;align-items:center;gap:8px;';
 
-  const titleText = document.createElement('span');
+  titleText = document.createElement('span');
   titleText.textContent = '✦ InfoDot Assist';
   titleText.style.cssText = 'color:#5c9bff;font-size:13px;font-weight:700;font-family:system-ui;letter-spacing:0.3px;white-space:nowrap;';
 
@@ -172,7 +177,7 @@ export function init(config = {}) {
   iframe.src = `${WIDGET_ORIGIN}?org=${orgKey}`;
   iframe.id = 'infodot-widget';
   iframe.allow = 'microphone';
-  iframe.style.cssText = 'width:380px;height:520px;border:none;display:block;';
+  iframe.style.cssText = 'width:380px;height:520px;border:none;display:block;background:#12141e;';
 
   wrapper.appendChild(titleBar);
   wrapper.appendChild(iframe);
@@ -331,6 +336,7 @@ export function destroy() {
   if (dragOverlay && dragOverlay.parentNode) dragOverlay.parentNode.removeChild(dragOverlay);
   wrapper = null;
   titleBar = null;
+  titleText = null;
   notifDot = null;
   iframe = null;
   minBtn = null;
