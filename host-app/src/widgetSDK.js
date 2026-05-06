@@ -123,20 +123,21 @@ export function init(config = {}) {
   wrapper.id = 'infodot-widget-wrapper';
   wrapper.style.cssText =
     'position:fixed;bottom:16px;right:20px;width:380px;border-radius:16px;' +
-    'box-shadow:0 8px 48px rgba(92,155,255,0.3),0 2px 16px rgba(0,0,0,0.6);z-index:999999;overflow:hidden;user-select:none;' +
-    'border:2px solid #5c9bff;transition:width 0.2s,border-radius 0.2s;';
+    'box-shadow:0 16px 64px rgba(0,0,0,0.7),0 0 0 1px rgba(79,131,255,0.25),0 0 40px rgba(79,131,255,0.12);' +
+    'z-index:999999;overflow:hidden;user-select:none;' +
+    'border:1px solid rgba(79,131,255,0.3);transition:width 0.2s,border-radius 0.2s;';
 
   titleBar = document.createElement('div');
   titleBar.style.cssText =
-    'height:28px;background:linear-gradient(135deg,#1a2a4a 0%,#1a1d27 100%);border-bottom:1px solid #2a2e3f;' +
+    'height:28px;background:linear-gradient(180deg,#0f1928 0%,#0c0f1a 100%);border-bottom:1px solid rgba(79,131,255,0.15);' +
     'display:flex;align-items:center;padding:0 8px;cursor:move;justify-content:space-between;flex-shrink:0;position:relative;';
 
   const titleLeft = document.createElement('div');
   titleLeft.style.cssText = 'display:flex;align-items:center;gap:8px;';
 
   titleText = document.createElement('span');
-  titleText.textContent = '✦ InfoDot Assist';
-  titleText.style.cssText = 'color:#5c9bff;font-size:13px;font-weight:700;font-family:system-ui;letter-spacing:0.3px;white-space:nowrap;';
+  titleText.textContent = 'InfoDot Assist';
+  titleText.style.cssText = 'color:#c8d8ff;font-size:12px;font-weight:700;font-family:system-ui;letter-spacing:0.2px;white-space:nowrap;';
 
   notifDot = document.createElement('span');
   notifDot.style.cssText =
